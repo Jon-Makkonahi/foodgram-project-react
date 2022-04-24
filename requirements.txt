@@ -1,0 +1,6 @@
+Django==2.2.19
+djangorestframework==3.13.1
+djoser
+drf-extra-fields==3.4.0
+Pillow==9.1.0
+django-filter==21.1
