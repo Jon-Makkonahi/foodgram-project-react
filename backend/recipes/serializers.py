@@ -2,8 +2,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from users.serializers import CustomUserSerializer
-
-from .models import (Favorites, Ingredient,
+from .models import (Favorite, Ingredient,
                      IngredientInRecipe, Purchase, Recipe, Tag)
 
 
@@ -56,7 +55,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Favorites.objects.filter(user=request.user, recipe=obj).exists()
+        return Favorite.objects.filter(user=request.user, recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
@@ -77,13 +76,18 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             )
         if len(data['tags']) > len(set(data['tags'])):
             raise serializers.ValidationError(
-                'Теги не должны повторяться!')
+                'Теги не должны повторяться!'
+            )
+        if int(data['cooking_time']) <= 0:
+            raise serializers.ValidationError(
+                'Время готовки должно быть > 0 '
+            )
         id_ingredients = []
         try:
             ingredients_set = request.data['ingredients']
         except KeyError:
             raise serializers.ValidationError(
-                'Необходимо добавить ингридиенты к рецепту!'
+                'Необходимо добавить ингредиенты к рецепту!'
             )
         if ingredients_set == []:
             raise serializers.ValidationError('Заполните поле ingredients!')
@@ -161,13 +165,13 @@ class FavoriteSerializer(serializers.ModelSerializer):
     recipe = serializers.IntegerField(source='recipe.id')
 
     class Meta:
-        model = Favorites
+        model = Favorite
         fields = ('user', 'recipe')
 
     def validate(self, data):
         user = data['user']['id']
         recipe = data['recipe']['id']
-        if Favorites.objects.filter(user=user, recipe__id=recipe).exists():
+        if Favorite.objects.filter(user=user, recipe__id=recipe).exists():
             raise serializers.ValidationError(
                 'Нельзя добавить повторно в избранное!'
             )
@@ -176,7 +180,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = validated_data['user']
         recipe = validated_data['recipe']
-        Favorites.objects.get_or_create(user=user, recipe=recipe)
+        Favorite.objects.get_or_create(user=user, recipe=recipe)
         return validated_data
 
 

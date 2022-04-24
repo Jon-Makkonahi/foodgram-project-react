@@ -7,9 +7,8 @@ from rest_framework.response import Response
 
 from users.serializers import RecipeSubcribeSerializer
 from users.pagination import LimitPageNumberPagination
-
 from .filters import IngredientNameFilter, RecipeFilter
-from .models import (Favorites, Ingredient, IngredientInRecipe,
+from .models import (Favorite, Ingredient, IngredientInRecipe,
                      Purchase, Recipe, Tag)
 from .permissions import AdminOrAuthorOrReadOnly
 from .serializers import (TagSerializer, IngredientSerializer,
@@ -20,14 +19,14 @@ UNELECTED = 'Рецепта нет в избранном!'
 NOT_ON_THE_LIST = 'В списке нет рецепта, который хотите удалить!'
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (permissions.AllowAny,)
     pagination_class = None
 
 
-class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (permissions.AllowAny,)
@@ -48,7 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
         cart = Purchase.objects.filter(user=self.request.user.id)
         is_favorited = self.request.query_params.get('is_favorited')
-        favorite = Favorites.objects.filter(user=self.request.user.id)
+        favorite = Favorite.objects.filter(user=self.request.user.id)
 
         if is_in_shopping_cart == 'true':
             queryset = queryset.filter(purchase__in=cart)
@@ -82,12 +81,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
             try:
-                favorite = Favorites.objects.get(
+                favorite = Favorite.objects.get(
                     user=request.user, recipe__id=pk
                 )
                 favorite.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
-            except Favorites.DoesNotExist:
+            except Favorite.DoesNotExist:
                 return Response(
                     UNELECTED, status=status.HTTP_400_BAD_REQUEST
                 )
