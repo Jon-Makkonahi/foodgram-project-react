@@ -168,6 +168,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             }
         ).data
 
+
 class RecipeSerializer(RecipeCreateSerializer):
     tags = TagSerializer(many=True)
     image = serializers.ImageField(
