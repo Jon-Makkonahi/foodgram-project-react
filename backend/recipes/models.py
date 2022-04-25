@@ -124,8 +124,16 @@ class IngredientInRecipe(models.Model):
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, 
+        related_name='favorite_recipes', 
+        on_delete=models.CASCADE
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='in_favorites',
+        on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name = 'Избранное'
