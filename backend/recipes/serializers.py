@@ -7,7 +7,6 @@ from .models import (Favorite, Ingredient,
                      IngredientInRecipe, Purchase, Recipe, Tag)
 
 
-
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
