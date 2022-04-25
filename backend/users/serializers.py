@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .models import User, Follow
 from recipes.models import Recipe
+from recipes.fields import Base64ImageField
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -27,12 +28,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
 
 class RecipeSubcribeSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(
-        max_length=None,
-        required=True,
-        allow_empty_file=False,
-        use_url=True,
-    )
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
