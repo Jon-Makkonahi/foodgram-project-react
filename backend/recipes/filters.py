@@ -1,4 +1,5 @@
 import django_filters as filters
+from django_filters.widgets import BooleanWidget
 
 from .models import Ingredient, Recipe
 
@@ -15,9 +16,13 @@ class RecipeFilter(filters.FilterSet):
     tags = filters.AllValuesMultipleFilter(
         field_name='tags__slug'
     )
-    is_favorited = filters.BooleanFilter(method='get_favorite')
+    is_favorited = filters.BooleanFilter(
+        method='get_favorite',
+        widget=BooleanWidget
+    )
     is_in_shopping_cart = filters.BooleanFilter(
-        method='get_is_in_shopping_cart'
+        method='get_is_in_shopping_cart',
+        widget=BooleanWidget
     )
 
     class Meta:
