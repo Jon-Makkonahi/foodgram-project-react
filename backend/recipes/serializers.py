@@ -170,16 +170,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ).data
 
 
-class RecipeSerializer(RecipeCreateSerializer):
-    tags = TagSerializer(many=True)
-    image = serializers.ImageField(
-        max_length=None,
-        required=True,
-        allow_empty_file=False,
-        use_url=True,
-    )
-
-
 class FavoriteSerializer(serializers.ModelSerializer):
     user = serializers.IntegerField(source='user.id')
     recipe = serializers.IntegerField(source='recipe.id')

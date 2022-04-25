@@ -12,7 +12,7 @@ from .models import (Favorite, Ingredient, IngredientInRecipe,
                      Purchase, Recipe, Tag)
 from .permissions import AdminOrAuthorOrReadOnly
 from .serializers import (TagSerializer, IngredientSerializer,
-                          RecipeCreateSerializer, RecipeSerializer,
+                          RecipeCreateSerializer, ShowRecipeSerializer,
                           FavoriteSerializer, PurchaseSerializer)
 
 UNELECTED = 'Рецепта нет в избранном!'
@@ -43,7 +43,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return RecipeSerializer
+            return ShowRecipeSerializer
         return RecipeCreateSerializer
 
     def get_serializer_context(self):
