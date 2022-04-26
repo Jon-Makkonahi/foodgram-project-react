@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = LimitPageNumberPagination
 
     def get_permissions(self):
-        if self.action in ['list', 'create']:
+        if self.action in ['list', 'create', 'retrieve']:
             permission_classes = [permissions.AllowAny]
         elif self.action in ['update', 'partial_update', 'destroy']:
             permission_classes = [IsAdminOrReadOnly]
