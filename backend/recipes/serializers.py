@@ -47,16 +47,16 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
                   'name', 'image', 'text', 'cooking_time')
 
     def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if request is None or request.user.is_anonymous:
-            return False
-        return Favorite.objects.filter(user=request.user, recipe=obj).exists()
+        user = self.context.get('request').user
+        return user.is_authenticated and Favorite.objects.filter(
+            recipe=obj, user=user
+        ).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        request = self.context.get('request')
-        if request is None or request.user.is_anonymous:
-            return False
-        return Purchase.objects.filter(user=request.user, recipe=obj).exists()
+        user = self.context.get('request').user
+        return user.is_authenticated and Purchase.objects.filter(
+            recipe=obj, user=user
+        ).exists()
 
     def get_ingredients(self, obj):
         objects = IngredientInRecipe.objects.filter(recipe=obj)
@@ -167,51 +167,3 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }
         ).data
-
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    user = serializers.IntegerField(source='user.id')
-    recipe = serializers.IntegerField(source='recipe.id')
-
-    class Meta:
-        model = Favorite
-        fields = ('user', 'recipe')
-
-    def validate(self, data):
-        user = data['user']['id']
-        recipe = data['recipe']['id']
-        if Favorite.objects.filter(user=user, recipe__id=recipe).exists():
-            raise serializers.ValidationError(
-                'Нельзя добавить повторно в избранное!'
-            )
-        return data
-
-    def create(self, validated_data):
-        user = validated_data['user']
-        recipe = validated_data['recipe']
-        Favorite.objects.get_or_create(user=user, recipe=recipe)
-        return validated_data
-
-
-class PurchaseSerializer(serializers.ModelSerializer):
-    user = serializers.IntegerField(source='user.id')
-    recipe = serializers.IntegerField(source='recipe.id')
-
-    class Meta:
-        model = Purchase
-        fields = ('user', 'recipe')
-
-    def validate(self, data):
-        user = data['user']['id']
-        recipe = data['recipe']['id']
-        if Purchase.objects.filter(user=user, recipe__id=recipe).exists():
-            raise serializers.ValidationError(
-                'Нельзя добавить повторно в список!'
-            )
-        return data
-
-    def create(self, validated_data):
-        user = validated_data['user']
-        recipe = validated_data['recipe']
-        Purchase.objects.get_or_create(user=user, recipe=recipe)
-        return validated_data
