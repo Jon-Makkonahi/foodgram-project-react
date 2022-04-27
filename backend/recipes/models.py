@@ -150,8 +150,15 @@ class Favorite(models.Model):
 
 
 class Purchase(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        related_name='purchase_recipes',
+        on_delete=models.CASCADE
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='in_purchases',
+        on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Cписок покупок'
