@@ -42,8 +42,8 @@ class Ingredient(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'Индигриент'
-        verbose_name_plural = 'Индигриенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name
@@ -98,14 +98,16 @@ class IngredientInRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
+        related_name='ingredient_amounts',
         verbose_name='Индигриент',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='ingredient_amounts',
         verbose_name='Рецепт',
     )
-    amount = models.IntegerField(
+    amount = models.PositiveIntegerField(
         verbose_name='Количество',
         validators=[MinValueValidator(1, message=QUANTITY_ERROR)]
     )
