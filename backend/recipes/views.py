@@ -1,4 +1,3 @@
-from django.db.models import Sum
 from django.http.response import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
@@ -75,29 +74,41 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             return obj_delete(user, model, pk=pk, message=NOT_ON_THE_LIST)
 
-    @action( 
-        detail=False, 
-        methods=['GET'], 
-        permission_classes=[permissions.IsAuthenticated] 
-    ) 
-    def download_shopping_cart(self, request): 
-        user = request.user 
-        recipe = IngredientInRecipe.objects.filter( 
-            recipe__in_purchases__user=user 
-        ) 
-        ingredients = recipe.values( 
-            'ingredient__name', 
-            'ingredient__measurement_unit').annotate( 
-            ingredients_total=Sum('amount') 
-        ) 
-        shopping_list = {} 
-        for item in ingredients: 
-            title = item.get('ingredient__name') 
-            count = str(item.get('ingredient_total')) + ' ' + item[ 
-                'ingredient__measurement_unit' 
-            ] 
-            shopping_list[title] = count 
-        data = '' 
-        for key, value in shopping_list.items(): 
-            data += f'{key} - {value}\n' 
-        return HttpResponse(data, content_type='text/plain')
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[permissions.IsAuthenticated]
+    )
+    def download_shopping_cart(self, request):
+        user = request.user
+        cart = user.purchase_recipes.all()
+        buying_list = {}
+        for item in cart:
+            recipe = item.recipe
+            ingredients_in_recipe = IngredientInRecipe.objects.filter(
+                recipe=recipe
+            )
+            for item in ingredients_in_recipe:
+                amount = item.amount
+                name = item.ingredient.name
+                measurement_unit = item.ingredient.measurement_unit
+                if name not in buying_list:
+                    buying_list[name] = {
+                        'amount': amount,
+                        'measurement_unit': measurement_unit
+                    }
+                else:
+                    buying_list[name]['amount'] = (
+                        buying_list[name]['amount'] + amount
+                    )
+        shopping_list = []
+        for item in buying_list:
+            shopping_list.append(
+                f'{item} - {buying_list[item]["amount"]}, '
+                f'{buying_list[item]["measurement_unit"]}\n'
+            )
+        response = HttpResponse(shopping_list, 'Content-Type: text/plain')
+        response['Content-Disposition'] = (
+            'attachment;' 'filename="shopping_list.txt"'
+        )
+        return response
