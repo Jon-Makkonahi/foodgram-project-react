@@ -1,12 +1,12 @@
+from django.db.models import Sum 
 from django.http.response import HttpResponse
-from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 
 from users.pagination import LimitPageNumberPagination
 from .filters import IngredientNameFilter, RecipeFilter
-from .models import (Favorite, Ingredient,
+from .models import (Favorite, Ingredient, IngredientInRecipe,
                      Purchase, Recipe, Tag)
 from .permissions import AdminOrAuthorOrReadOnly
 from .serializers import (TagSerializer, IngredientSerializer,
@@ -75,28 +75,29 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             return obj_delete(user, model, pk=pk, message=NOT_ON_THE_LIST)
 
-    @action(detail=False, methods=['get'],
-            permission_classes=[permissions.IsAuthenticated])
-    def download_shopping_cart(self, request, pk=None):
-        user = request.user
-        recipes = Recipe.objects.filter(
-            in_favourites__user=user,
-            in_favourites__is_in_shopping_cart=True
-        )
-        ingredients = recipes.values(
-            'ingredients__name',
-            'ingredients__measurement_unit__name').order_by(
-            'ingredients__name').annotate(
-            ingredients_total=Sum('ingredient_amounts__amount')
-        )
-        shopping_list = {}
-        for item in ingredients:
-            title = item.get('ingredients__name')
-            count = str(item.get('ingredients_total')) + ' ' + item[
-                'ingredients__measurement_unit__name'
-            ]
-            shopping_list[title] = count
-        data = ''
-        for key, value in shopping_list.items():
-            data += f'{key} - {value}\n'
+    @action( 
+        detail=False, 
+        methods=['GET'], 
+        permission_classes=[permissions.IsAuthenticated] 
+    ) 
+    def download_shopping_cart(self, request): 
+        user = request.user 
+        recipe = IngredientInRecipe.objects.filter( 
+            recipe__in_purchases__user=user 
+        ) 
+        ingredients = recipe.values( 
+            'ingredient__name', 
+            'ingredient__measurement_unit').annotate( 
+            ingredients_total=Sum('amount') 
+        ) 
+        shopping_list = {} 
+        for item in ingredients: 
+            title = item.get('ingredient__name') 
+            count = str(item.get('ingredient_total')) + ' ' + item[ 
+                'ingredient__measurement_unit' 
+            ] 
+            shopping_list[title] = count 
+        data = '' 
+        for key, value in shopping_list.items(): 
+            data += f'{key} - {value}\n' 
         return HttpResponse(data, content_type='text/plain')
