@@ -17,6 +17,7 @@ def obj_create(user, model, pk, message):
     serializer = RecipeSubcribeSerializer(recipe)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 def obj_delete(user, model, pk, message):
     obj = model.objects.filter(user=user, recipe__id=pk).first()
     if obj is None:
