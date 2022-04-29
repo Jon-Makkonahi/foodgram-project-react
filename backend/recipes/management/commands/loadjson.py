@@ -12,13 +12,14 @@ class Command(BaseCommand):
             type=str,
             help="file path"
         )
-    
+
     def handle(self, *args, **options):
         file_path = options["path"]
 
         with open(
             file_path,
-            encoding='utf-8') as f:
+            encoding='utf-8'
+        ) as f:
             data = json.load(f)
             for item in data:
                 Ingredient.objects.create(

@@ -1,17 +1,14 @@
-from djoser.serializers import SetPasswordSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions
+from djoser.serializers import SetPasswordSerializer
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import User, Follow
-from .serializers import (
-    CustomUserSerializer,
-    FollowSerializer,
-    UserCreateSerializer
-)
+from .models import Follow, User
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAdminOrReadOnly
+from .serializers import (CustomUserSerializer, FollowSerializer,
+                          UserCreateSerializer)
 
 ERROR_UNSUBSCRIBE = 'Вы не можете отписаться повторно!'
 ERROR_TWICE_SUBSCRIBE = 'Вы не можете подписаться повторно!'

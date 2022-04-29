@@ -1,16 +1,16 @@
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
-
 from users.pagination import LimitPageNumberPagination
+
 from .filters import IngredientNameFilter, RecipeFilter
-from .models import (Favorite, Ingredient, IngredientInRecipe,
-                     Purchase, Recipe, Tag)
+from .models import (Favorite, Ingredient, IngredientInRecipe, Purchase,
+                     Recipe, Tag)
 from .permissions import AdminOrAuthorOrReadOnly
-from .serializers import (TagSerializer, IngredientSerializer,
-                          RecipeCreateSerializer, ShowRecipeSerializer)
+from .serializers import (IngredientSerializer, RecipeCreateSerializer,
+                          ShowRecipeSerializer, TagSerializer)
 from .utils import obj_create, obj_delete
 
 UNELECTED = 'Рецепта нет в избранном!'

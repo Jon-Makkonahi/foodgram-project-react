@@ -1,9 +1,9 @@
-from djoser.serializers import UserSerializer, UserCreateSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from recipes.fields import Base64ImageField
+from recipes.models import Recipe
 from rest_framework import serializers
 
-from .models import User, Follow
-from recipes.models import Recipe
-from recipes.fields import Base64ImageField
+from .models import Follow, User
 
 
 class UserCreateSerializer(UserCreateSerializer):

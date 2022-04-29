@@ -1,10 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-
 from users.serializers import CustomUserSerializer
+
 from .fields import Base64ImageField
-from .models import (Favorite, Ingredient,
-                     IngredientInRecipe, Purchase, Recipe, Tag)
+from .models import (Favorite, Ingredient, IngredientInRecipe, Purchase,
+                     Recipe, Tag)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -131,14 +131,17 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def ingredient_create(self, ingredient_data, recipe):
         for ingredient in ingredient_data:
-            ingredient_model = get_object_or_404(Ingredient, id=ingredient['id']) 
+            ingredient_model = get_object_or_404(
+                Ingredient,
+                id=ingredient['id']
+            )
             amount = ingredient['amount']
             IngredientInRecipe.objects.create(
                 ingredient=ingredient_model,
                 recipe=recipe,
                 amount=amount
             )
-    
+
     def create(self, validated_data):
         tags_data = validated_data.pop('tags')
         ingredient_data = validated_data.pop('ingredients')
