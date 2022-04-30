@@ -10,7 +10,7 @@
 - Python
 - Django
 - DRF
-- SQLite3(на текущий момент в GitHub)
+- SQLite3
 - PostgeSQL
 
 ### Как запустить проект:
