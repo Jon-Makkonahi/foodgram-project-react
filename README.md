@@ -63,7 +63,7 @@ python manage.py loadjson --path 'recipes/data/ingredients.json'
 ```
 http://51.250.86.0/signup
 ```
-## Для ревьера:
+## Для ревьюера:
 http://51.250.86.0/ - сайт
 
 http://51.250.86.0/admin - админка
