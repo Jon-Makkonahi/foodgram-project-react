@@ -45,14 +45,14 @@ pip install -r requirements.txt (до этого вынести файл require
 ```
 
 Выполнить миграции:
-перейдите в backend папку проекта, где находится папка с manage.py
+перейдите в backend папку проекта, где находится  manage.py
 ```
 python3 manage.py migrate
 ```
 
 Если необходимо, заполненить базу данных тестовыми данными:
 
-1. перейдите в backend папку проекта, где находится папка с manage.py
+1. перейдите в backend папку проекта, где находится manage.py
 2. запустите скрипт loadjson.py:
 ```
 python manage.py loadjson --path 'recipes/data/ingredients.json'
