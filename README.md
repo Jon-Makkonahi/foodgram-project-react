@@ -63,6 +63,30 @@ python manage.py loadjson --path 'recipes/data/ingredients.json'
 ```
 http://51.250.86.0/signup
 ```
+## Запуск Docker:
+Запустите docker-compose командой 
+
+```bash
+sudo docker-compose up -d --build
+```
+У вас развернётся проект, запущенный через Gunicorn с базой данных Postgres.
+Выполнить миграции, создать суперпользователя и заполнить БД данными, а также собрать статику.
+
+```bash
+sudo docker-compose exec backend python manage.py migrate
+sudo docker-compose exec backend python manage.py createsuperuser
+sudo docker-compose exec backend python manage.py loadjson --path 'recipes/data/ingredients.json'
+sudo docker-compose exec backend python manage.py collectstatic --no-input
+```
+Остановка контейнеров и их удаление вместе со всеми зависимостями
+```bash
+sudo docker-compose down -v
+```
+Ссылка на проект
+```
+http://51.250.86.0/
+```
+
 ## Для ревьюера:
 http://51.250.86.0/ - сайт
 
