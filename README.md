@@ -58,11 +58,6 @@ python3 manage.py migrate
 python manage.py loadjson --path 'recipes/data/ingredients.json'
 ```
 
-Регистрация нового пользователя:
-
-```
-http://51.250.86.0/signup
-```
 ## Запуск Docker:
 Запустите docker-compose командой 
 
