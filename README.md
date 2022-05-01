@@ -81,11 +81,3 @@ sudo docker-compose down -v
 ```
 http://51.250.86.0/
 ```
-
-## Для ревьюера:
-http://51.250.86.0/ - сайт
-
-http://51.250.86.0/admin - админка
-
-login JonMakko
-password eTuzHX3f
