@@ -5,7 +5,9 @@
 ### Авторы:
 - Daniil Bibikov (Jon-Makkonahi) https://github.com/Jon-Makkonahi
 
-<img width="481" alt="image" src="https://user-images.githubusercontent.com/88703195/225974091-108e901e-79f5-400a-9b44-db7b5b3db748.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/88703195/225974091-108e901e-79f5-400a-9b44-db7b5b3db748.png">
+
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/88703195/225974237-d0af7a51-f5ad-402b-a07d-13c89cb529d6.png">
 
 
 ### Технологии:
