@@ -5,6 +5,8 @@
 ### Авторы:
 - Daniil Bibikov (Jon-Makkonahi) https://github.com/Jon-Makkonahi
 
+<img width="629" alt="image" src="https://user-images.githubusercontent.com/88703195/225973001-247aa921-3052-400f-a9b3-57a8a84c4182.png">
+
 ### Технологии:
 - Python
 - Django
